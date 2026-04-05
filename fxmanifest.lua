@@ -25,6 +25,7 @@ client_scripts {
 
 server_scripts {
     'server.lua'
+    '@oxmysql/lib/utils.lua', -- This helps initialize the MySQL global
 }
 
 lua54 'yes'

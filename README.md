@@ -1,97 +1,88 @@
-# BCGAMING-mulitjob 
+#BCGAMING
 
-📁 Multi-Job Script - README
-📌 Overview
+🏢 Advanced Career Center & Multi-Job System
 
-The Multi-Job Script allows players to hold and switch between multiple jobs without losing progress. This is perfect for roleplay servers where players want to work in different departments (Police, EMS, Mechanic, etc.).
+A professional, high-performance career management system for FiveM. This resource allows players to hold multiple authorized job roles, progress through a custom experience (XP) system, and maintains immersion by saving work locations.
 
-⚙️ Features
-✅ Hold multiple jobs at once
-🔄 Switch jobs with command/menu
-💾 Saves job data automatically
-🧑‍💼 Supports grades/ranks per job
-🔒 Job restrictions (optional)
-📊 Compatible with QBCore / ESX
-📦 Requirements
+✨ Key Features
 
-Make sure you have:
+Authorized Career Slots: Players only see jobs manually assigned to them by administrators.
 
-QBCore or ESX Framework
-ox_lib (recommended for UI)
-oxmysql (or mysql-async)
-📥 Installation
-Download or place the script into your resources folder:
-resources/[scripts]/multijob
-Add to your server.cfg:
-ensure multijob
-Import the SQL file into your database:
-multijob.sql
-🗃️ Database Setup
+XP & Leveling System: Independent level tracking for every job role.
 
-Example table:
+Smart Location Sync: Remembers where a player was when they clocked out and returns them there upon clock-in.
 
-CREATE TABLE `multijobs` (
-  `identifier` VARCHAR(50),
-  `job` VARCHAR(50),
-  `grade` INT,
-  PRIMARY KEY (`identifier`, `job`)
+Modern Dashboard: A sleek, dark-themed NUI accessible via a customizable keybind.
+
+Optimized Logic: Built with ox_lib and oxmysql for a lag-free experience.
+
+🛠️ Installation & Setup
+
+1. Database Configuration
+
+You must run this SQL query in your database manager (HeidiSQL, phpMyAdmin, etc.) to create the required table structure. This prevents the "nil value" errors by providing a place for data to save.
+
+CREATE TABLE IF NOT EXISTS `player_multijobs` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `identifier` VARCHAR(60) NOT NULL,
+  `job_name` VARCHAR(50) NOT NULL,
+  `job_grade` INT DEFAULT 0,
+  `job_label` VARCHAR(50) DEFAULT 'Job',
+  `grade_label` VARCHAR(50) DEFAULT 'Grade',
+  `last_location` LONGTEXT DEFAULT NULL,
+  `job_xp` INT DEFAULT 0,
+  `job_level` INT DEFAULT 1,
+  UNIQUE KEY `unique_job` (`identifier`, `job_name`)
 );
-🎮 Commands
-Command	Description
-/jobs	View your jobs
-/setjob	Switch to a saved job
-/addjob	Add a job (Admin only)
-/removejob	Remove a job (Admin only)
-🧠 How It Works
-When a player gets a new job, it is saved in the database.
-Players can switch between jobs without losing rank.
-Each job keeps its own grade/level.
-The active job is synced with the framework (QBCore/ESX).
-🔧 Configuration
 
-Edit config.lua:
 
-Config = {}
+2. Dependency Check
 
--- Max jobs per player
-Config.MaxJobs = 3
+Ensure the following resources are started before this script in your server.cfg:
 
--- Command names
-Config.Commands = {
-    OpenMenu = "jobs",
-    SwitchJob = "setjob"
-}
+ensure qb-core
 
--- Use menu (ox_lib)
-Config.UseMenu = true
-🔐 Permissions
+ensure ox_lib
 
-Example:
+ensure oxmysql
 
-Config.AdminGroups = {
-    "admin",
-    "god"
-}
-🖥️ UI (Optional)
-Uses ox_lib context menu
-Clean job selection interface
-Easy switching
-🐞 Known Issues
-Make sure jobs exist in your framework
-Ensure database is properly imported
-Restart server after installing
-💡 Future Updates (Optional Ideas)
-Job cooldown system
-Duty toggle per job
-Paycheck per job
-Job XP system
-👨‍💻 Credits
-Script by: BCGaming Development
-Framework: QBCore / ESX
-UI: ox_lib
-📞 Support
+3. Folder Naming
 
-If you need help:
+Ensure your resource folder is named exactly as defined in your manifest. If you experience "nil" errors, ensure there are no spaces or special characters in the folder name.
 
-Join your server Discord
-Contact server staff/dev team
+🎮 Usage & Commands
+
+Administrator: Granting a Career
+
+Since this is an authorized system, players cannot "self-add" jobs. An admin must use:
+/addjob [Player_ID] [Job_Name] [Grade]
+
+Example: /addjob 1 police 0
+
+Developer: Rewarding Experience (XP)
+
+To reward players for completing community tasks or successful work shifts, use this server-side export in your other scripts:
+
+-- Syntax: exports['BCGAMING-mulitjob-main']:AddJobXP(source, amount)
+exports['BCGAMING-mulitjob-main']:AddJobXP(source, 100) 
+
+
+⚙️ Configuration
+
+Open config.lua to customize your experience:
+
+Max Careers: Limit how many jobs one person can hold (Default: 5).
+
+XP Scaling: Adjust the Multiplier to change how much harder each level becomes.
+
+UI Icons: Update the job list with FontAwesome icons to match your specific server roles.
+
+⌨️ Controls
+
+F10 (Default): Open the Career Dashboard.
+
+ESC: Close the menu.
+
+Click: Selecting a job will automatically switch your duty status and handle your location sync.
+
+Created with a focus on clean, professional, and community-friendly gameplay.
