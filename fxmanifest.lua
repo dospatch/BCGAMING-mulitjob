@@ -1,12 +1,13 @@
 fx_version 'cerulean'
 game 'gta5'
 
-author 'Gemini'
-description 'Advanced Multi-Job & Career Management System'
+author 'BCGAMING'
+description 'Advanced Career Center & Multi-Job System'
 version '1.1.0'
 
--- Using ox_lib for optimized callbacks
+-- Dependencies
 dependency 'ox_lib'
+dependency 'oxmysql'
 
 ui_page 'html/index.html'
 
@@ -24,8 +25,8 @@ client_scripts {
 }
 
 server_scripts {
+    '@oxmysql/lib/utils.lua',
     'server.lua'
-    '@oxmysql/lib/utils.lua', -- This helps initialize the MySQL global
 }
 
 lua54 'yes'
